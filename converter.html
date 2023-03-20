@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<style>
+    /* color vars */
+    :root{
+        --supreme: #e5e5e5;
+        --darkgrey: #6c757d;
+        --darkblue: #34465D;
+        --h1: #f1f1f1;
+    }
+
+    body{
+        background: var(--darkblue);
+        font-family: montserrat,sans-serif;
+    }
+
+    h3{
+        color: var(--h1);
+        text-align: center;
+        margin: 5px 0 28px 0px;
+    }
+
+    #page_container{
+        background: var(--darkgrey);
+        width: 450px;
+        height: 250px;
+        border-radius: 12px;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        padding: 20px;
+        display: block;
+        place-items: center;
+        box-shadow: #444 4px 4px 5px;
+    }
+
+    #swap_currencies{
+        float: left;
+        background: var(--supreme);
+        color: var(--darkblue);
+        width: 160px;
+        transition: all 0.2s;
+        cursor: pointer;
+        border-radius: 12px;
+    }
+
+    #swap_currencies:hover{
+        background: var(--darkblue);
+        color: var(--supreme);
+    }
+
+    .currency_container{
+        float: left;
+        width: 100%;
+        text-align: center;
+        margin: 16px 0px;
+    }
+
+    select, input, button{
+        border: 1px solid var(--supreme);
+        background: var(--darkblue);
+        color: var(--supreme);
+        height: 25px;
+    }
+
+    select, input:focus{
+        outline: none;
+    }
+
+    select{
+        cursor: pointer;
+        border-radius: 7px 0 0 7px;
+        margin-right: -3px;
+    }
+
+    .text{
+        color: var(--supreme);
+        position: absolute;
+        margin-left: 4px;
+        margin-top: 4px;
+    }
+
+    .currency{
+        text-align: center;
+        width: 100px;
+        height: 21px;
+        border-radius: 0 7px 7px 0px;
+        margin-left: -2px;
+    }
+
+    .hidden{
+        display: none;
+    }
+</style>
+
+<html>
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" charset="utf-8">
+        <title>Currency Converter</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    </head>
+    <body>
+        <div id="page_container">
+            <h3>Simple Currency Converter</h3>
+            <div style="width: 100%; height: 142px;">
+                <div class="currency_container">
+                    <select name="currencies" class="currency_selector" id="left_currency_selector">
+                        <option value="USD" class="options">USD</option>
+                        <option value="BRL" class="options hidden">BRL</option>
+                        <option value="EUR" class="options">EUR</option>
+                    </select>
+                    <span class="text" id="left_currency_text">$</span>
+                    <input type="text" class="currency" id="left_currency" value="1,00">
+                </div>
+                
+                <div class="currency_container" style="display: flex; justify-content: center; margin: 10px 0;">
+                    <button id="swap_currencies">SWAP</button>
+                </div>
+                
+                <div class="currency_container">
+                    <select name="currencies" class="currency_selector" id="right_currency_selector">
+                        <option value="BRL" class="options">BRL</option>
+                        <option value="USD" class="options hidden">USD</option>
+                        <option value="EUR" class="options">EUR</option>
+                    </select>
+                    <span class="text" id="right_currency_text">R$</span>
+                    <input type="text" class="currency" id="right_currency" value="">
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+
+<script>
+    //waits for html to load
+    $(document).ready(function(){
+        //calls convertion right away so it wont leave blank inputs
+        getConvertion($("#left_currency_selector").val(), $("#right_currency_selector").val(), $("#left_currency").val(), $("#right_currency"));
+        
+        //when changing currencies
+        $(".currency_selector").change(function(){
+
+            blockDuplicates();
+
+            if(this.id == "left_currency_selector"){
+                getConvertion($("#right_currency_selector").val(), $("#left_currency_selector").val(), $("#right_currency").val(), $("#left_currency"));
+                changeCoinSymbol($("#left_currency_selector").val(), $("#left_currency_text"));
+            }
+            else{
+                getConvertion($("#left_currency_selector").val(), $("#right_currency_selector").val(), $("#left_currency").val(), $("#right_currency"));
+                changeCoinSymbol($("#right_currency_selector").val(), $("#right_currency_text"));
+            }
+        });
+
+        //when swap button is clicked
+        $("#swap_currencies").click( () => { 
+            swapCurrencies();
+            changeCoinSymbol($("#left_currency_selector").val(), $("#left_currency_text"));
+            changeCoinSymbol($("#right_currency_selector").val(), $("#right_currency_text"));
+        });
+
+        //when a new input is entered
+        $(".currency").keyup(function(){
+            numberFormat(this);
+
+            if(this.id == "left_currency"){
+                getConvertion($("#left_currency_selector").val(), $("#right_currency_selector").val(), this.value, $("#right_currency"));
+            }
+            else{
+                getConvertion($("#right_currency_selector").val(), $("#left_currency_selector").val(), this.value, $("#left_currency"));
+            }
+        });
+    });
+
+
+    //converts and calculates currency, then returns amount in selected element
+    function getConvertion(converted_from, converted_to, amount, element){
+
+        $.ajax({
+            type: "GET",
+            url: `https://economia.awesomeapi.com.br/last/${converted_from}-${converted_to}`,
+            async: false,
+            success: function(response){
+                let args = converted_from+converted_to; //merging both currencies to var, to access response json attribute
+
+                let convertion = amount.replaceAll(",", ".") * response[args].bid;
+                convertion = convertion.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0]; //truncates converted amount to 2 decimals without rounding
+
+                element[0].value = convertion.replaceAll(".", ",");
+            }
+        });
+    }
+
+    //swaps currencies and amounts
+    function swapCurrencies(){
+        let temp_var = $("#right_currency_selector").val();
+        let temp_var2 = $("#right_currency").val();
+
+        $("#right_currency_selector").find(".hidden").removeClass("hidden");
+        $("#right_currency_selector > option:selected").addClass("hidden");
+        $("#right_currency_selector").val( $("#left_currency_selector").val() );
+        $("#right_currency").val( $("#left_currency").val() );
+
+        $("#left_currency_selector").find(".hidden").removeClass("hidden");
+        $("#left_currency_selector > option:selected").addClass("hidden");
+        $("#left_currency_selector").val(temp_var);
+        $("#left_currency").val( temp_var2 );
+    }
+
+    //formats designated input field
+    function numberFormat(element){
+        let number = element.value
+
+        number = number.replaceAll(".", ","); //replaces dot with comma
+        number = number.replaceAll(/[^0-9,]/g, ''); //replaces any non numeric char except for comma
+
+        //loops through string and counts number of commas in it
+        let dot_count = 0;
+        for(i=0; i<=number.length;i++){
+            if(number[i]==','){
+                dot_count++;
+            }
+        }
+        
+        //removes first iteration of dot in string, so the number cant have multiple commas
+        if(number.includes(',') && dot_count>1){
+            number = number.replace(',','');
+        }
+
+        element.value = number; //returns formatted number to targeted element
+    }
+
+    //changes symbol next to input fields to match selected currency
+    function changeCoinSymbol(currency, target){
+
+        switch(currency){
+            case "USD":
+                $(target[0]).text("$");
+                break;
+            
+            case "BRL":
+                $(target[0]).text("R$");
+                break;
+
+            case "EUR":
+                $(target[0]).text("€");
+                break;
+        }
+    }
+
+    //prevents duplicates currencies from showing up in select fields
+    function blockDuplicates(){
+        let left_select_val = $("#left_currency_selector").val();
+        let right_select_val = $("#right_currency_selector").val();
+
+        $("#left_currency_selector option").removeClass("hidden");
+        $(`#left_currency_selector option[value='${right_select_val}']`).addClass("hidden");
+
+        $("#right_currency_selector option").removeClass("hidden");
+        $(`#right_currency_selector option[value='${left_select_val}']`).addClass("hidden");
+    }
+</script>
