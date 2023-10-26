@@ -1,0 +1,128 @@
+/* color vars */
+:root{
+   --supreme: #e5e5e5;
+   --darkgrey: #434343;
+   --darkblue: #34465D;
+   --h1: #f1f1f1;
+}
+
+body{
+   background: var(--darkblue);
+   font-family: Arial, Helvetica, sans-serif;
+}
+
+h3{
+   color: var(--h1);
+   text-align: center;
+   margin: 0;
+}
+
+#page_container{
+   display: flex;
+   flex-direction: column;
+   position: absolute;
+   gap: 15px;
+   background: var(--darkgrey);
+   width: 600px;
+   height: 250px;
+   border-radius: 12px;
+   left: 50%;
+   top: 50%;
+   transform: translate(-50%, -50%);
+   padding: 20px;
+   place-items: center;
+   box-shadow: #222 2px 2px 5px;
+}
+
+#swap_currencies{
+   float: left;
+   background: var(--supreme);
+   color: var(--darkblue);
+   width: 4em;
+   transition: all 0.2s;
+   cursor: pointer;
+   border-radius: 15px;
+}
+
+#swap_currencies:hover{
+   background: var(--darkblue);
+   color: var(--supreme);
+}
+
+.container{
+   width: 100%;
+   display: flex;
+   gap: 14px;
+   align-items: center;
+   height: 9rem;
+}
+
+.currency_container{
+   /* width: 100%; */
+   display: flex;
+   justify-content: center;
+   position: relative;
+}
+
+.currency_container div{
+   position: relative;
+}
+
+select, input, button{
+   border: 1px solid var(--supreme);
+   background: var(--darkblue);
+   color: var(--supreme);
+   height: 30px;
+}
+
+select, input:focus{
+   outline: none;
+}
+
+select{
+   cursor: pointer;
+   border-radius: 15px 0 0 15px;
+   margin: 0;
+   padding: 0 5px;
+}
+
+.text{
+   display: flex;
+   color: var(--supreme);
+   position: absolute;
+   top: 54%;
+   left: 9%;
+   transform: translate(-50%, -50%);
+   margin: 0;
+   width: 20px;
+}
+
+.currency{
+   text-align: center;
+   width: 100%;
+   /* height: 30px; */
+   border-radius: 0 15px 15px 0px;
+   margin: 0 -1px;
+}
+
+.hidden{
+   display: none;
+}
+
+@media only screen and (max-width: 680px) {
+   #page_container{
+      width: 500px;
+      gap: 28px;
+   }
+
+   .container{
+      flex-direction: column;
+   }
+}
+
+@media only screen and (max-width: 530px){
+   #page_container{
+      width: 410px;
+   }
+}
+
