@@ -7,6 +7,7 @@
 }
 
 body{
+   color: var(--h1);
    background: var(--darkblue);
    font-family: Arial, Helvetica, sans-serif;
 }
@@ -49,23 +50,9 @@ h3{
    color: var(--supreme);
 }
 
-.container{
-   width: 100%;
-   display: flex;
+.main-container{
    gap: 14px;
-   align-items: center;
    height: 9rem;
-}
-
-.currency_container{
-   /* width: 100%; */
-   display: flex;
-   justify-content: center;
-   position: relative;
-}
-
-.currency_container div{
-   position: relative;
 }
 
 select, input, button{
@@ -109,20 +96,35 @@ select{
    display: none;
 }
 
-@media only screen and (max-width: 768px) {
+div.currency_name{
+   position: absolute;
+   top: 39px;
+   font-size: 10px;
+   left: 14px;
+}
+
+@media only screen and (max-width: 767px) {
    #page_container{
       width: 500px;
       gap: 28px;
+      height: 270px;
    }
 
-   .container{
+   div.currency_name{
+      left: 70px;
+   }
+
+   .main-container{
       flex-direction: column;
    }
 }
 
-@media only screen and (max-width: 530px){
+@media only screen and (max-width: 575px){
    #page_container{
       width: 410px;
    }
-}
 
+   div.currency_name{
+      left: 62px;
+   }
+}

@@ -13,17 +13,21 @@
    <body>
       <div id="page_container">
          <h3>Currency Converter</h3>
-         <div class="container">
-            <div class="currency_container">
-               <select name="currencies" class="currency_selector" id="left_currency">
-                  <option value="USD" class="options">USD</option>
-                  <option value="BRL" class="options hidden">BRL</option>
-                  <option value="EUR" class="options">EUR</option>
-               </select>
-               <div>
-                  <span class="text" id="left_currency_text">$</span>
-                  <input type="text" class="currency" id="left_amount" value="1,00">
+         <div class="main-container w-100 d-flex align-items-center p-1">
+            <div class="currency_container w-100 d-flex flex-column justify-content-center position-relative">
+               <div class="container-fluid d-flex justify-content-center p-0">
+                  <select name="currencies" class="currency_selector col-sm-2 col-md-3" id="left_currency">
+                     <option value="USD" class="options" name="United States Dollar">USD</option>
+                     <option value="BRL" class="options hidden" name="Brazilian Real">BRL</option>
+                     <option value="EUR" class="options" name="Euro">EUR</option>
+                     <option value="GBP" class="options" name="British Pound Sterling">GBP</option>
+                  </select>
+                  <div class="position-relative col-sm-7 col-md-9">
+                     <span class="text" id="left_currency_text">$</span>
+                     <input type="text" class="currency" id="left_amount" value="1,00">
+                  </div>
                </div>
+               <div class="currency_name">* United States Dollar</div>
             </div>
                
             <div class="currency_container">
@@ -32,16 +36,20 @@
                </button>
             </div>
                
-            <div class="currency_container">
-               <select name="currencies" class="currency_selector" id="right_currency">
-                  <option value="BRL" class="options">BRL</option>
-                  <option value="USD" class="options hidden">USD</option>
-                  <option value="EUR" class="options">EUR</option>
-               </select>
-               <div>
-                  <span class="text" id="right_currency_text">R$</span>
-                  <input type="text" class="currency" id="right_amount" value="">
+            <div class="currency_container w-100 d-flex flex-column justify-content-center position-relative">
+               <div class="container-fluid d-flex justify-content-center p-0">
+                  <select name="currencies" class="currency_selector col-sm-2 col-md-3" id="right_currency">
+                     <option value="BRL" class="options" name="Brazilian Real">BRL</option>
+                     <option value="USD" class="options hidden" name="United States Dollar">USD</option>
+                     <option value="EUR" class="options" name="Euro">EUR</option>
+                     <option value="GBP" class="options" name="British Pound Sterling">GBP</option>
+                  </select>
+                  <div class="position-relative col-sm-7 col-md-9">
+                     <span class="text" id="right_currency_text">R$</span>
+                     <input type="text" class="currency" id="right_amount" value="">
+                  </div>
                </div>
+               <div class="currency_name">* Brazilian Real</div>
             </div>
          </div>
       </div>

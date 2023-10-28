@@ -13,6 +13,8 @@ $(document).ready(async function(){ //waits for html to load
    $(".currency_selector").change(async function(){ //when changing currencies
       blockDuplicates();
 
+      changeCurrencyDisplayName(this); //set currency name bellow input changed
+
       if(this.id == "left_currency"){
          left_amount.value = await getConvertion(right_currency.value, left_currency.value, right_amount.value);
          changeCoinSymbol(left_currency.value, left_currency_text);
@@ -63,18 +65,23 @@ async function getConvertion(converted_from, converted_to, amount){
 
 //swaps currencies and amounts
 function swapCurrencies(){
-   const temp_var = right_currency.value;
-   const temp_var2 = right_amount.value;
+   const right_currency_holder = right_currency.value;
+   const right_amount_holder = right_amount.value;
+
+   const left_name_holder = $(left_currency).parent().parent().find(".currency_name").text();
+   const right_name_holder = $(right_currency).parent().parent().find(".currency_name").text();
 
    $("#right_currency").find(".hidden").removeClass("hidden"); //add back hidden currency option
    $("#right_currency > option:selected").addClass("hidden"); //remove currency selected on the left side
    $("#right_currency").val( $("#left_currency").val() ); //set right side currency
    $("#right_amount").val( $("#left_amount").val() ); //set right side amount
+   $(right_currency).parent().parent().find(".currency_name").text(left_name_holder) //set right side currency name
 
    $("#left_currency").find(".hidden").removeClass("hidden"); //add back hidden currency option
    $("#left_currency > option:selected").addClass("hidden"); //remove currency selected on the right side
-   $("#left_currency").val(temp_var); //set left side currency
-   $("#left_amount").val( temp_var2 ); //set left side amount
+   $("#left_currency").val(right_currency_holder); //set left side currency
+   $("#left_amount").val( right_amount_holder ); //set left side amount
+   $(left_currency).parent().parent().find(".currency_name").text(right_name_holder) //set left side currency name
 }
 
 //formats designated input field
@@ -100,15 +107,19 @@ function changeCoinSymbol(currency, target){
    switch(currency){
       case "USD":
          $(target).text("$");
-         break;
+      break;
       
       case "BRL":
          $(target).text("R$");
-         break;
+      break;
 
       case "EUR":
          $(target).text("€");
-         break;
+      break;
+
+      case "GBP":
+         $(target).text("£");
+      break;
    }
 }
 
@@ -122,4 +133,11 @@ function blockDuplicates(){
 
    $("#right_currency option").removeClass("hidden");
    $(`#right_currency option[value='${left_select_val}']`).addClass("hidden");
+}
+
+//changes currency name bellow inputs 
+function changeCurrencyDisplayName(element){
+   const name = $(element).find("option:selected").attr("name")
+
+   $(element).parent().parent().find(".currency_name").text(`* ${name}`);
 }
