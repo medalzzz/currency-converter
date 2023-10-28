@@ -34,7 +34,8 @@ $(document).ready(async function(){ //waits for html to load
    $(".currency").keyup(async function(e){
       this.value = numberFormat(this);
 
-      if(/[^\d.,]/gi.test(e.originalEvent.key)) return; //prevents request if key pressed was not numeric / comma / dot
+      //prevents request if key pressed was: not numeric, comma, dot, not backspace and input value isnt empty
+      if(/[^\d.,]/gi.test(e.originalEvent.key) && e.originalEvent.key != "Backspace" && $(this).val() != "") return;
 
       if(this.id == "left_amount") 
          right_amount.value = await getConvertion(left_currency.value, right_currency.value, left_amount.value);
